@@ -1,209 +1,240 @@
-const milestones = [
-  { year: "1950s", title: "The question", text: "Turing reframed machine intelligence as observable behavior." },
-  { year: "1956", title: "AI is named", text: "The Dartmouth workshop established artificial intelligence as a field." },
-  { year: "1980s", title: "Expert systems", text: "Rules and domain knowledge moved AI into business settings." },
-  { year: "1997", title: "Machines compete", text: "Deep Blue demonstrated the power of specialized computation." },
-  { year: "2012", title: "Deep learning", text: "Neural networks accelerated progress in vision and pattern recognition." },
-  { year: "2017", title: "Transformers", text: "Attention-based models changed how machines work with language." },
-  { year: "2020s", title: "Generative AI", text: "AI became a collaborative interface for creating, deciding, and working." },
-  { year: "Next", title: "Responsible scale", text: "The leadership challenge is pairing usefulness with trust and governance." },
+"use client";
+
+import { useEffect, useState } from "react";
+
+type Artifact = {
+  id: string;
+  number: string;
+  title: string;
+  type: string;
+  summary: string;
+  introduction: string;
+  objective: string;
+  process: string;
+  tools: string;
+  value: string;
+  relevance: string;
+  link?: string;
+};
+
+const artifacts: Artifact[] = [
+  {
+    id: "spotlight",
+    number: "01",
+    title: "Spotlight Speakers AI Lab",
+    type: "0→1 Group Product · AI Bot",
+    summary: "A conversational speaker-discovery experience built with six teammates from deep interviews to a usable AI bot.",
+    introduction: "Spotlight Speakers helps event organizers find a professional speaker whose expertise, audience fit, style, logistics, and pricing align with their event.",
+    objective: "Reduce the friction and uncertainty in speaker selection by turning detailed speaker knowledge into an accessible guided conversation.",
+    process: "Our seven-person team interviewed every speaker, developed structured profiles, grounded the bot in those profiles, tested the booking flow, and created process and marketing communications.",
+    tools: "Qualitative interviews, structured knowledge design, conversational AI, prompt guidance, product storytelling",
+    value: "Transforms fragmented speaker information into a consistent, client-centered matching experience.",
+    relevance: "Demonstrates customer discovery, data structuring, cross-functional teamwork, AI product thinking, and 0→1 delivery.",
+    link: "https://box.boodle.ai/a/@spotlightSpeaker",
+  },
+  {
+    id: "timeline",
+    number: "02",
+    title: "AI & Machine Learning Timeline",
+    type: "Interactive Learning Artifact",
+    summary: "A concise visual history connecting foundational AI milestones to today’s leadership questions.",
+    introduction: "The timeline follows AI from Turing’s early question and the Dartmouth workshop through expert systems, deep learning, transformers, and generative AI.",
+    objective: "Explain how technical breakthroughs, periods of limited progress, and changing access to computing shaped the field.",
+    process: "Selected milestones for their lasting influence, synthesized the key shift at each stage, and translated the research into an accessible chronological experience.",
+    tools: "Course assessments, AI/ML research, synthesis, information design",
+    value: "Helps non-specialists understand that AI progress is cumulative—and that responsible adoption is now the defining leadership challenge.",
+    relevance: "Shows the ability to turn complex history into a useful resource for strategic conversations.",
+  },
+  {
+    id: "understanding",
+    number: "03",
+    title: "My Responsible AI Practice",
+    type: "Assessment Synthesis · Framework",
+    summary: "A six-part framework for applying AI with clarity, accountability, and measurable human value.",
+    introduction: "My course assessments moved my understanding beyond definitions and toward the decisions required to create trustworthy AI-enabled products.",
+    objective: "Create a practical framework that connects problem framing, data quality, human-centered design, measurement, accountability, and continuous learning.",
+    process: "Reviewed recurring themes across assessments, grouped them into product decisions, and expressed each as an action a team can use.",
+    tools: "Course assessments, reflection, responsible AI principles, product strategy",
+    value: "Makes responsible AI concrete enough to guide discovery, delivery, review, and improvement.",
+    relevance: "Positions AI literacy as a change-leadership capability—not only a technical skill.",
+  },
 ];
 
-const profileElements = [
-  "Name + brief bio",
-  "Keynote topics",
-  "Target audience",
-  "Speaking style",
-  "Travel preferences",
-  "A/V requirements",
-  "Languages",
-  "Pricing structure",
+const milestones = [
+  ["1950", "The question", "Can machines demonstrate intelligent behavior?"],
+  ["1956", "AI is named", "A new academic field takes shape at Dartmouth."],
+  ["1980s", "Expert systems", "Rules and domain knowledge enter business."],
+  ["2012", "Deep learning", "Neural networks accelerate vision and pattern recognition."],
+  ["2017", "Transformers", "Attention changes machine understanding of language."],
+  ["2020s", "Generative AI", "AI becomes an everyday collaborative interface."],
+];
+
+const skills = [
+  ["Product Strategy", "0→1 discovery, problem framing, user journeys, value propositions"],
+  ["AI / ML", "AI foundations, prompt design, structured knowledge, responsible adoption"],
+  ["Research", "Qualitative interviews, synthesis, audience needs, insight translation"],
+  ["Leadership", "Team alignment, change communication, stakeholder storytelling"],
+  ["Experience Design", "Conversational flows, information architecture, accessibility"],
+  ["Communication", "Infographics, executive-ready narratives, educational resources"],
 ];
 
 export default function Home() {
+  const [selected, setSelected] = useState<Artifact | null>(null);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll<HTMLElement>(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("visible")),
+      { threshold: 0.12 },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!selected) return;
+    const close = (event: KeyboardEvent) => event.key === "Escape" && setSelected(null);
+    document.addEventListener("keydown", close);
+    document.body.classList.add("modal-open");
+    return () => {
+      document.removeEventListener("keydown", close);
+      document.body.classList.remove("modal-open");
+    };
+  }, [selected]);
+
   return (
     <main>
-      <header className="nav-wrap">
-        <a className="brand" href="#top" aria-label="Sirisha Neelam — home">
-          <span className="brand-mark">SN</span>
-          <span>Sirisha Neelam</span>
-        </a>
-        <nav aria-label="Primary navigation">
+      <nav className="navbar" aria-label="Primary navigation">
+        <a className="nav-logo" href="#home"><span>SN</span> Sirisha Neelam</a>
+        <div className="nav-links">
+          <a href="#home">Home</a>
           <a href="#about">About</a>
-          <a href="#work">Artifacts</a>
           <a href="#experience">Experience</a>
-          <a className="nav-cta" href="#contact">Let&apos;s connect</a>
-        </nav>
-      </header>
+          <a href="#learning">Learning</a>
+          <a href="#skills">Skills</a>
+          <a href="#artifacts">Artifacts</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a className="nav-github" href="https://github.com/sirishaneelam-UB/AI-ML-Portfolio" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </nav>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow">AI/ML · Product thinking · Change leadership</p>
-          <h1>I turn emerging technology into <em>useful, human-centered products.</em></h1>
-          <p className="hero-lede">
-            I connect customer insight, responsible AI, and product execution to move ideas from ambiguity to adoption.
-          </p>
-          <div className="hero-actions">
-            <a className="button primary" href="#work">Explore the work <span>↘</span></a>
-            <a className="button quiet" href="https://github.com/sirishaneelam-UB/AI-ML-Portfolio" target="_blank" rel="noreferrer">View GitHub</a>
-          </div>
+      <section className="home-section reveal visible" id="home">
+        <div className="profile-monogram" aria-label="Sirisha Neelam monogram"><span>SN</span></div>
+        <p className="status"><i></i> Building human-centered AI products</p>
+        <h1>Sirisha Neelam</h1>
+        <h2>AI/ML Product Thinker <b>·</b> Change Leader <b>·</b> 0→1 Builder</h2>
+        <p className="hero-copy">I turn emerging technology into useful, understandable, and responsible experiences for the people who use it and the teams who bring it to life.</p>
+        <div className="hero-actions">
+          <a className="button primary" href="#artifacts">Explore my work</a>
+          <a className="button secondary" href="https://box.boodle.ai/a/@spotlightSpeaker" target="_blank" rel="noreferrer">Try the AI bot ↗</a>
         </div>
-        <div className="hero-card" aria-label="Professional focus areas">
-          <p className="card-kicker">My value proposition</p>
-          <blockquote>“I make AI understandable, actionable, and valuable—for the people who use it and the teams who build it.”</blockquote>
-          <div className="focus-grid">
-            <div><strong>01</strong><span>Discover the right problem</span></div>
-            <div><strong>02</strong><span>Translate insight into product</span></div>
-            <div><strong>03</strong><span>Lead responsible change</span></div>
-          </div>
-        </div>
+        <a className="scroll-cue" href="#about"><span>Scroll to discover</span><b>↓</b></a>
       </section>
 
-      <section className="manifesto" id="about">
-        <p className="section-label">01 / About</p>
-        <div>
-          <h2>Curious by nature.<br />Practical by design.</h2>
-          <p>
-            I am a product-minded professional building fluency in artificial intelligence and machine learning. My journey is grounded in a simple belief: technology creates lasting value only when it solves a real human need.
-          </p>
-          <p>
-            I bring structure to ambiguity, listen closely to users, and translate complex ideas into clear experiences. My aspiration is to lead responsible AI-enabled change—helping teams move from experimentation to confident, measurable adoption.
-          </p>
-          <div className="principles">
-            <span>Customer empathy</span><span>0→1 thinking</span><span>Responsible AI</span><span>Collaborative delivery</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="work" id="work">
-        <div className="section-intro">
-          <p className="section-label light">02 / Selected artifacts</p>
-          <h2>From learning to applied impact.</h2>
-          <p>Three course-based artifacts that demonstrate how I investigate, frame, build, and communicate with AI.</p>
-        </div>
-
-        <article className="case-study">
-          <div className="case-head">
+      <div className="site-shell">
+        <section className="section-card reveal" id="about">
+          <div className="section-heading"><span>01</span><div><p>Professional profile</p><h2>About Me</h2></div></div>
+          <div className="about-grid">
             <div>
-              <p className="artifact-number">Artifact 01 · Group AI Lab</p>
-              <h3>Spotlight Speakers</h3>
-              <p className="case-subtitle">An AI-assisted speaker bureau, built from 0→1 with six teammates.</p>
+              <p className="lead">I connect customer insight, product thinking, and responsible AI to turn ambiguous opportunities into practical solutions.</p>
+              <p>I am developing my expertise in artificial intelligence and machine learning with a product-management mindset. I start by understanding the human need, translate qualitative insight into structured decisions, and communicate complexity in a way that helps others act.</p>
+              <p>My aspiration is to lead AI-enabled change that earns trust, improves real experiences, and creates measurable value—not novelty for its own sake.</p>
             </div>
-            <a className="external-link" href="https://box.boodle.ai/a/@spotlightSpeaker" target="_blank" rel="noreferrer">Try the AI bot ↗</a>
+            <aside className="value-card">
+              <span>Personal value proposition</span>
+              <blockquote>“I make AI understandable, actionable, and valuable.”</blockquote>
+              <ul><li>Discover the right problem</li><li>Translate insight into product</li><li>Lead responsible adoption</li></ul>
+            </aside>
           </div>
+        </section>
 
-          <div className="case-grid">
-            <div className="case-narrative">
-              <p className="mini-label">The opportunity</p>
-              <p>Booking a professional speaker is a high-consideration decision. Clients must compare expertise, audience fit, style, logistics, and budget—often across fragmented information.</p>
-              <p className="mini-label">The product response</p>
-              <p>Our seven-person team created a conversational bot that transforms detailed speaker interviews into structured profiles and helps clients discover a strong-fit speaker faster.</p>
-            </div>
-            <div className="product-lens">
-              <p className="mini-label">My product management lens</p>
+        <section className="section-card reveal" id="experience">
+          <div className="section-heading"><span>02</span><div><p>Applied product work</p><h2>Experience</h2></div></div>
+          <article className="experience-item featured">
+            <div className="experience-marker"><i></i><span>0→1</span></div>
+            <div className="experience-body">
+              <div className="experience-title"><div><h3>Product Contributor · Spotlight Speakers AI Lab</h3><p>Seven-person group project</p></div><span>AI-assisted speaker booking</span></div>
               <ul>
-                <li><strong>Discovery:</strong> start with rich qualitative interviews, not assumptions.</li>
-                <li><strong>Data design:</strong> turn unstructured stories into consistent product inputs.</li>
-                <li><strong>Experience:</strong> reduce search friction through guided conversation.</li>
-                <li><strong>Delivery:</strong> align seven teammates around one usable end-to-end outcome.</li>
+                <li>Conducted deep speaker interviews to capture expertise, audience fit, speaking style, logistics, languages, requirements, and pricing.</li>
+                <li>Translated unstructured interview notes into eight consistent profile fields that made speakers comparable and searchable.</li>
+                <li>Helped shape a conversational AI bot that guides clients from event need to a relevant speaker match.</li>
+                <li>Communicated the end-to-end journey through improved process and marketing infographics.</li>
+                <li>Collaborated with six teammates to take the concept from an open problem to a working experience.</li>
               </ul>
+              <div className="impact-strip"><div><strong>7</strong><span>team members</span></div><div><strong>8</strong><span>profile fields</span></div><div><strong>1</strong><span>working AI bot</span></div></div>
             </div>
-          </div>
+          </article>
+          <p className="source-note">Verified employment history and dates will be added when the résumé source is available.</p>
+        </section>
 
-          <div className="infographic process-graphic" aria-label="Spotlight Speakers product development process">
-            <div className="graphic-head"><span>Process infographic</span><strong>From conversation to confident match</strong></div>
-            <div className="process-flow">
-              <div className="process-step"><b>01</b><span className="step-icon">◌</span><h4>Listen deeply</h4><p>Interview each speaker for expertise, style, constraints, and goals.</p></div>
-              <div className="flow-arrow">→</div>
-              <div className="process-step"><b>02</b><span className="step-icon">▤</span><h4>Structure profiles</h4><p>Convert stories into eight consistent, client-relevant fields.</p></div>
-              <div className="flow-arrow">→</div>
-              <div className="process-step"><b>03</b><span className="step-icon">✦</span><h4>Build the bot</h4><p>Ground the AI experience in the complete speaker profile set.</p></div>
-              <div className="flow-arrow">→</div>
-              <div className="process-step"><b>04</b><span className="step-icon">✓</span><h4>Guide the match</h4><p>Help clients move from need to shortlist with clarity.</p></div>
+        <section className="section-card reveal" id="learning">
+          <div className="section-heading"><span>03</span><div><p>AI/ML development</p><h2>Learning Journey</h2></div></div>
+          <div className="learning-grid">
+            <div className="learning-card"><span>Course-based study</span><h3>Artificial Intelligence & Machine Learning</h3><p>Developing fluency in AI history, ML foundations, generative AI, responsible application, and product implications through assessments and applied artifacts.</p></div>
+            <div className="learning-card accent"><span>Applied lab</span><h3>Spotlight Speakers</h3><p>Practiced discovery, knowledge structuring, conversational design, product communication, and cross-functional delivery in a real group setting.</p></div>
+          </div>
+          <div className="timeline" aria-label="AI and machine learning timeline">
+            {milestones.map(([year, title, text]) => <div className="timeline-item" key={year}><time>{year}</time><i></i><h3>{title}</h3><p>{text}</p></div>)}
+          </div>
+        </section>
+
+        <section className="section-card reveal" id="skills">
+          <div className="section-heading"><span>04</span><div><p>Capabilities</p><h2>Skills & Expertise</h2></div></div>
+          <div className="skills-grid">{skills.map(([title, text], index) => <div className="skill-card" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></div>)}</div>
+        </section>
+
+        <section className="section-card reveal" id="artifacts">
+          <div className="section-heading"><span>05</span><div><p>Selected course work</p><h2>Artifacts</h2></div></div>
+          <p className="section-intro">Each artifact is presented as a reusable professional resource: what it solves, how it was developed, and the value it demonstrates.</p>
+          <div className="artifacts-grid">
+            {artifacts.map((artifact) => (
+              <button className="artifact-card" key={artifact.id} onClick={() => setSelected(artifact)} aria-label={`Open details for ${artifact.title}`}>
+                <span className="artifact-number">{artifact.number}</span>
+                <p>{artifact.type}</p>
+                <h3>{artifact.title}</h3>
+                <span className="artifact-summary">{artifact.summary}</span>
+                <b>View project details <i>↗</i></b>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="section-card reveal" id="principles">
+          <div className="section-heading"><span>06</span><div><p>Assessment synthesis</p><h2>How I Apply AI</h2></div></div>
+          <div className="principles-grid">
+            {["Frame the human problem", "Understand the data", "Design for clarity", "Measure real value", "Keep people accountable", "Learn in the loop"].map((item, index) => <div key={item}><span>{index + 1}</span><h3>{item}</h3></div>)}
+          </div>
+          <blockquote className="principle-quote">The strongest AI product is not the one that does the most. It is the one that earns the right level of trust.</blockquote>
+        </section>
+
+        <section className="contact-section reveal" id="contact">
+          <p>Open to conversations about</p>
+          <h2>AI-enabled product strategy, responsible innovation, and change leadership.</h2>
+          <div className="contact-actions"><a className="button primary" href="https://github.com/sirishaneelam-UB" target="_blank" rel="noreferrer">Connect on GitHub ↗</a><a className="button secondary" href="#home">Back to top ↑</a></div>
+          <p className="contact-note">Direct email and LinkedIn details can be added from the verified résumé.</p>
+        </section>
+      </div>
+
+      <footer><span>© 2026 Sirisha Neelam</span><span>AI/ML Product Portfolio</span><a href="https://github.com/sirishaneelam-UB/AI-ML-Portfolio" target="_blank" rel="noreferrer">Source on GitHub ↗</a></footer>
+
+      {selected && (
+        <div className="modal-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}>
+          <section className="modal" role="dialog" aria-modal="true" aria-labelledby="artifact-modal-title">
+            <div className="modal-top"><span>Artifact {selected.number}</span><button onClick={() => setSelected(null)} aria-label="Close project details">×</button></div>
+            <p className="modal-type">{selected.type}</p>
+            <h2 id="artifact-modal-title">{selected.title}</h2>
+            <div className="modal-content">
+              <div><h3>Introduction</h3><p>{selected.introduction}</p></div>
+              <div><h3>Objective</h3><p>{selected.objective}</p></div>
+              <div><h3>Process</h3><p>{selected.process}</p></div>
+              <div><h3>Tools & methods</h3><p>{selected.tools}</p></div>
+              <div><h3>Value proposition</h3><p>{selected.value}</p></div>
+              <div><h3>Professional relevance</h3><p>{selected.relevance}</p></div>
             </div>
-          </div>
-
-          <div className="profile-panel">
-            <div><p className="mini-label">The data foundation</p><h4>Eight fields make every profile useful and comparable.</h4></div>
-            <div className="profile-tags">{profileElements.map((item, index) => <span key={item}><b>{String(index + 1).padStart(2, "0")}</b>{item}</span>)}</div>
-          </div>
-
-          <div className="infographic marketing-graphic" aria-label="Spotlight Speakers promotional infographic">
-            <div className="promo-copy">
-              <p className="promo-kicker">SPOTLIGHT / SPEAKERS</p>
-              <h4>Your audience deserves the right voice.</h4>
-              <p>Describe your event. Discover a speaker aligned to your topic, audience, format, and budget.</p>
-              <a href="https://box.boodle.ai/a/@spotlightSpeaker" target="_blank" rel="noreferrer">Meet your match →</a>
-            </div>
-            <div className="bot-window">
-              <div className="bot-top"><span></span><span></span><span></span><b>Spotlight Match</b></div>
-              <div className="chat user">I need an engaging speaker for emerging leaders.</div>
-              <div className="chat bot">Great—what outcome should the audience leave with?</div>
-              <div className="match-pill">Finding the fit, not just a name.</div>
-            </div>
-          </div>
-
-          <div className="outcome-row">
-            <div><strong>0→1</strong><span>from open problem to working experience</span></div>
-            <div><strong>7</strong><span>teammates aligned around one product</span></div>
-            <div><strong>8</strong><span>structured fields per speaker profile</span></div>
-          </div>
-        </article>
-
-        <article className="artifact timeline-artifact">
-          <div className="artifact-heading">
-            <p className="artifact-number">Artifact 02 · AI/ML Timeline</p>
-            <h3>Every breakthrough changes the leadership question.</h3>
-            <p>AI evolved from a theoretical question into an everyday collaborator. The opportunity now is not simply to use it—but to shape how it is used.</p>
-          </div>
-          <div className="timeline">
-            {milestones.map((item) => <div className="milestone" key={item.year}><span className="dot"></span><time>{item.year}</time><h4>{item.title}</h4><p>{item.text}</p></div>)}
-          </div>
-          <p className="timeline-takeaway"><strong>My takeaway:</strong> technical capability may move in leaps, but adoption moves at the speed of understanding, trust, and organizational readiness.</p>
-        </article>
-
-        <article className="artifact reflection-artifact">
-          <div className="artifact-heading">
-            <p className="artifact-number">Artifact 03 · AI/ML Understanding</p>
-            <h3>My framework for responsible application.</h3>
-            <p>Course assessments helped me move beyond definitions toward a product-oriented understanding of where AI creates value—and where human judgment must remain visible.</p>
-          </div>
-          <div className="understanding-grid">
-            <div><span>01</span><h4>Frame the problem</h4><p>Begin with the decision or experience to improve. AI is a means, not the strategy.</p></div>
-            <div><span>02</span><h4>Know the data</h4><p>Model output reflects its inputs. Relevance, representation, consent, and quality matter.</p></div>
-            <div><span>03</span><h4>Design for people</h4><p>Make the system understandable, accessible, and easy to challenge when it is wrong.</p></div>
-            <div><span>04</span><h4>Measure real value</h4><p>Evaluate usefulness and outcomes—not novelty, activity, or output volume alone.</p></div>
-            <div><span>05</span><h4>Keep humans accountable</h4><p>Automate assistance, not responsibility. Escalation and review should be intentional.</p></div>
-            <div><span>06</span><h4>Learn in the loop</h4><p>Monitor performance, gather feedback, and update the product as needs and risks evolve.</p></div>
-          </div>
-          <div className="reflection-quote">“The strongest AI product is not the one that does the most. It is the one that earns the right level of trust.”</div>
-        </article>
-      </section>
-
-      <section className="experience" id="experience">
-        <p className="section-label">03 / Experience & capabilities</p>
-        <div className="experience-copy">
-          <h2>A builder at the intersection of people, product, and possibility.</h2>
-          <p>My portfolio demonstrates an emerging product practice: customer discovery, structured synthesis, cross-functional collaboration, AI-assisted experience design, and clear communication for adoption.</p>
-          <div className="capability-list">
-            <div><span>Product</span><p>0→1 discovery · problem framing · value proposition · user journeys · prioritization</p></div>
-            <div><span>AI / ML</span><p>AI foundations · prompt design · structured knowledge · responsible adoption · evaluation mindset</p></div>
-            <div><span>Leadership</span><p>Stakeholder alignment · team collaboration · change communication · storytelling</p></div>
-          </div>
-          <p className="resume-note">Detailed employment history and contact information will be added from the final resume source.</p>
+            <div className="modal-actions">{selected.link && <a className="button primary" href={selected.link} target="_blank" rel="noreferrer">Open the AI bot ↗</a>}<button className="button secondary" onClick={() => setSelected(null)}>Close</button></div>
+          </section>
         </div>
-      </section>
-
-      <section className="contact" id="contact">
-        <p className="section-label light">04 / Contact</p>
-        <div>
-          <h2>Let&apos;s build what&apos;s next—responsibly.</h2>
-          <p>I&apos;m interested in conversations about AI-enabled product strategy, change leadership, and human-centered innovation.</p>
-          <a className="button contact-button" href="https://github.com/sirishaneelam-UB" target="_blank" rel="noreferrer">Connect on GitHub ↗</a>
-        </div>
-      </section>
-
-      <footer><span>Sirisha Neelam</span><span>AI/ML Portfolio · 2026</span><a href="#top">Back to top ↑</a></footer>
+      )}
     </main>
   );
 }
